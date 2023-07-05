@@ -53,7 +53,7 @@ if (selected == 'Heart Disease Prediction'):
                   restecg, thalach, exang, oldpeak, slope, ca, thal]]
 
     load_clf = pickle.load(
-        open('/home/phantom/Desktop/Project 1/heart_disease_model.pkl', 'rb'))
+        open('heart_disease_model.pkl', 'rb'))
     
     pretty_result = {"age": age, "cp":cp, "sex": sex,"trestbps": trestbps, "chol": chol, "fbs": fbs, "restecg": restecg, "exang": exang, "oldpeak": oldpeak, "slope": slope,"ca":ca,"thal":thal,"thalach":thalach}
     st.json(pretty_result)
@@ -95,7 +95,7 @@ if (selected == 'Diabetes Prediction'):
                Insulin, BMI, DiabetesPedigreeFunction, Age]]
 
     model = pickle.load(
-        open('/home/phantom/Desktop/Project 1/model_DIAB.pkl', 'rb'))
+        open('model_DIAB.pkl', 'rb'))
     if st.button('Predict'):
         result = model.predict(inputs)
         updated_res = result.flatten().astype(int)
@@ -234,7 +234,7 @@ if (selected == 'Hepatitis Mortality Predictor'):
     
     model_choice = "DecisionTree"    
     loaded_model = joblib.load(
-        open('/home/phantom/Desktop/Project 1/hepB_model.pkl', 'rb'))
+        open('hepB_model.pkl', 'rb'))
     prediction = loaded_model.predict(single_sample)
     pred_prob = loaded_model.predict_proba(single_sample)    
 
