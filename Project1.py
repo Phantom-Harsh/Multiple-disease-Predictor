@@ -20,7 +20,7 @@ import os
 import openai
 openai.api_key = "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"
 
-with open('/home/phantom/Desktop/Project 2/pic2.jpg', "rb") as image_file:
+with open('pic2.jpg', "rb") as image_file:
     encoded_string = base64.b64encode(image_file.read())
 st.markdown(
     f"""
@@ -53,19 +53,20 @@ with st.sidebar:
 
 if (selected == 'HOME'):
     st.title("Multiple Disease Prediction WebApp")
-    image = Image.open('/home/phantom/Downloads/images.png')
+    image = Image.open('HOME.jpg')
     new_image = image.resize((800, 500))
-    st.image(new_image)    
-    st.text("The Following Disease Predictions Are Available ->")    
+    st.image(new_image)
+    st.text("The Following Disease Predictions Are Available ->")
 
 # Liver Disease Prediction Page used # https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset
 if (selected == 'Liver Disease Prediction'):
 
     st.title('Liver Disease Prediction')
-    image = Image.open('liver.png')
+    st.button("About", help="The Liver Disease Predictor App is a powerful tool designed to assess the likelihood of liver disease based on specific patient information. By inputting the patient's sex (A), age (B), total bilirubin (C), direct bilirubin (D), alkaline phosphatase (E), alanine aminotransferase (F), aspartate aminotransferase (G), total proteins (H), albumin (I), and albumin and globulin ratio (J), the app generates a comprehensive analysis. Utilizing advanced algorithms, it evaluates the data to provide an accurate prediction regarding the presence or absence of liver disease. This app empowers healthcare professionals to make informed decisions and facilitate early intervention, ultimately improving patient outcomes and liver health management.  DataSet Used : https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset")
+    image = Image.open('Liver.jpeg')
     new_image = image.resize((800, 500))
     st.image(new_image)
-    info = pd.read_csv('/home/phantom/Downloads/dataset.csv')
+    info = pd.read_csv('dataset.csv')
     info['Albumin_and_Globulin_Ratio'].fillna(
         info['Albumin_and_Globulin_Ratio'].median(), inplace=True)
 
@@ -116,12 +117,12 @@ if (selected == 'Liver Disease Prediction'):
 
 # Heart Disease Prediction Page
 if (selected == 'Heart Disease Prediction'):
-    st.title('Heart Disease Prediction using ML')    
-    st.button("About", help="Cardiovascular disease or heart disease describes a range of conditions that affect your heart.\n Diseases under the heart disease umbrella include blood vessel diseases, such as coronary artery disease. \nFrom WHO statistics every year 17.9 million dying from heart disease. \nThe medical study says that human life style is the main reason behind this heart problem. Apart from this there are many key factors which warns that the person may/maynot getting chance of heart disease.\nFrom the dataset if we create suitable machine learning technique which classify the heart disease more accurately, it is very helpful to the health organisation as well as patients.\nDataset used Link : https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset?datasetId=216167&sortBy=voteCount")
+    st.title('Heart Disease Prediction using ML')
+    st.button("About", help="The Heart Disease Predictor App is a cutting-edge tool designed to assess the risk of heart disease based on specific patient information. By inputting the patient's age, chest pain type (cp), sex, resting blood pressure (trestbps), cholesterol level (chol), fasting blood sugar (fbs), resting electrocardiographic results (restecg), exercise-induced angina (exang), ST depression induced by exercise relative to rest (oldpeak), slope of the peak exercise ST segment (slope), number of major vessels colored by fluoroscopy (ca), thallium stress test result (thal), and maximum heart rate achieved (thalach), the app utilizes advanced algorithms to generate a comprehensive analysis. This empowers healthcare professionals to make informed decisions, provide personalized care, and effectively manage heart disease.\nDataset used Link : https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset?datasetId=216167&sortBy=voteCount")
     image = Image.open('heart.jpg')
     new_image = image.resize((800, 500))
     st.image(new_image)
-    
+
     age = st.slider('age', 29, 77, 40, 1)
     cp = st.slider('cp', 0, 3, 1, 1)
     sex = st.slider('sex', 0, 1, 0, 1, help="0=female,1=male")
@@ -140,7 +141,7 @@ if (selected == 'Heart Disease Prediction'):
                   restecg, thalach, exang, oldpeak, slope, ca, thal]]
 
     load_clf = pickle.load(
-        open('/home/phantom/Desktop/Project 1/heart_disease_model.pkl', 'rb'))
+        open('heart_disease_model.pkl', 'rb'))
 
     pretty_result = {"age": age, "cp": cp, "sex": sex, "trestbps": trestbps, "chol": chol, "fbs": fbs,
                      "restecg": restecg, "exang": exang, "oldpeak": oldpeak, "slope": slope, "ca": ca, "thal": thal, "thalach": thalach}
@@ -166,8 +167,8 @@ if (selected == 'Diabetes Prediction'):
     st.title(
         "Diabetes Risk Prediction for Females")
     st.markdown(
-        "About", help="This a Web app that tells you if you are a female whether you are at risk for Diabetes or not.")    
-    image = Image.open('Diabetes.jpeg')
+        "About", help="The Diabetes Risk Prediction for Females Predictor App is a powerful tool designed specifically for women to assess their risk of developing diabetes. By inputting the patient's information, including the number of pregnancies, glucose levels, blood pressure, skin thickness, insulin levels, BMI (body mass index), diabetes pedigree function, and age, the app utilizes advanced algorithms to generate a personalized analysis. It takes into account factors that are particularly relevant to females and their unique risk profiles. The app provides an accurate prediction of the likelihood of developing diabetes, enabling individuals to take proactive steps towards prevention, early detection, and appropriate management of the condition. Dataset Used : https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database")
+    image = Image.open('Diabetes.jpg')
     new_image = image.resize((800, 500))
     st.image(new_image)
     st.header("Just fill in the information below")
@@ -187,7 +188,7 @@ if (selected == 'Diabetes Prediction'):
                      'Insulin': Insulin, 'BMI': BMI, 'Diabetes Pedigree Function': DiabetesPedigreeFunction, 'Age': Age}
     st.json(pretty_result)
     model = pickle.load(
-        open('/home/phantom/Desktop/Project 1/model_DIAB.pkl', 'rb'))
+        open('model_DIAB.pkl', 'rb'))
     if st.button('Predict'):
         result = model.predict(inputs)
         updated_res = result.flatten().astype(int)
@@ -208,7 +209,8 @@ if (selected == 'Diabetes Prediction'):
 # Parkinsons Disease Prediction Page
 if (selected == "Parkinsons Prediction"):
     # page title
-    st.title("Parkinson's Disease Prediction using ML")
+    st.title("Parkinson's Disease Prediction")
+    st.button("About", help="The Parkinson's Disease Prediction Predictor App is a valuable tool designed to assess the risk of Parkinson's disease in individuals. By utilizing advanced algorithms and inputting relevant information such as age, gender, family history, tremors, rigidity, bradykinesia, gait disturbances, and balance problems, the app generates a comprehensive analysis. It evaluates the collected data to provide an accurate prediction regarding the likelihood of developing Parkinson's disease. This empowers healthcare professionals to identify individuals at risk, facilitate early intervention, and optimize management strategies. The app aids in improving patient outcomes by enabling timely diagnosis and personalized treatment plans for Parkinson's disease. Datset Used : https://www.kaggle.com/datasets/vikasukani/parkinsons-disease-data-set")
     image = Image.open('parkinsons-disease.jpg')
     new_image = image.resize((800, 500))
     st.image(new_image)
@@ -267,7 +269,7 @@ if (selected == "Parkinsons Prediction"):
     # creating a button for Prediction
 
     parkinsons_model = pickle.load(open(
-        '/home/phantom/Desktop/Project 1/parkinsons_model.sav', 'rb'))
+        'parkinsons_model.sav', 'rb'))
     if st.button("Parkinson's Test Result"):
         parkinsons_prediction = parkinsons_model.predict(
             [[fo, fhi, flo, Jitter_percent, Jitter_Abs, RAP, PPQ, DDP, Shimmer, Shimmer_dB, APQ3, APQ5, APQ, DDA, NHR, HNR, RPDE, DFA, spread1, spread2, D2, PPE]])
@@ -305,6 +307,7 @@ def get_fvalue(val):
 
 if (selected == 'Hepatitis Mortality Predictor'):
     st.title("Hepatitis Mortality Predictor")
+    st.button("About", help="The Hepatitis Mortality Predictor App is a valuable tool designed to assess the risk of mortality in individuals with hepatitis. By inputting the patient's age, sex, steroid usage, antiviral treatment, presence of fatigue, spiders, ascites, varices, bilirubin levels, alkaline phosphatase levels, SGOT levels, albumin levels, prothrombin time, and histology data, the app utilizes advanced algorithms to generate a comprehensive analysis. It evaluates the collected information to provide an accurate prediction regarding the mortality risk associated with hepatitis. This empowers healthcare professionals to identify high-risk individuals, provide timely interventions, and optimize treatment strategies to improve patient outcomes and survival rates for individuals with hepatitis. DataSet Used : https://www.kaggle.com/datasets/codebreaker619/hepatitis-data")
     image = Image.open('Hepatitis.jpg')
     new_image = image.resize((800, 500))
     st.image(new_image)
@@ -337,7 +340,7 @@ if (selected == 'Hepatitis Mortality Predictor'):
 
     model_choice = "DecisionTree"
     loaded_model = joblib.load(
-        open('/home/phantom/Desktop/Project 1/hepB_model.pkl', 'rb'))
+        open('hepB_model.pkl', 'rb'))
     prediction = loaded_model.predict(single_sample)
     pred_prob = loaded_model.predict_proba(single_sample)
 
@@ -539,7 +542,7 @@ if (selected == 'Help - ChatBot'):
     st.subheader("AI Doctor:")
     image = Image.open('ChatBot.jpg')
     new_image = image.resize((800, 500))
-    st.image(new_image)    
+    st.image(new_image)
 
     model = st.selectbox(
         "Select a model",
@@ -578,12 +581,13 @@ if (selected == 'Help - ChatBot'):
 # Pneumonia Detector Prediction Page
 if (selected == 'Pneumonia Detector'):
     st.title("Pneumonia Detector")
-    st.button("About", help=" What is Pneumonia? \nPneumonia is an inflammatory condition of the lung affecting primarily the small air sacs known as alveoli.Symptoms typically include some combination of productive or dry cough, chest pain, fever and difficulty breathing. The severity of the condition is variable. Pneumonia is usually caused by infection with viruses or bacteria and less commonly by other microorganisms, certain medications or conditions such as autoimmune diseases.Risk factors include cystic fibrosis, chronic obstructive pulmonary disease (COPD), asthma, diabetes, heart failure, a history of smoking, a poor ability to cough such as following a stroke and a weak immune system. Diagnosis is often based on symptoms and physical examination. Chest X-ray, blood tests, and culture of the sputum may help confirm the diagnosis.The disease may be classified by where it was acquired, such as community- or hospital-acquired or healthcare-associated pneumonia.")
-    image = Image.open('Pneumonia.jpg')
+    st.button("About", help="The Pneumonia Detector Predictor App is an innovative tool designed to assist in the detection of pneumonia based on chest X-ray images. By uploading the patient's chest X-ray, the app utilizes advanced image recognition algorithms to analyze the presence of abnormalities indicative of pneumonia. It evaluates the X-ray image for signs such as infiltrates, consolidation, and lung opacities. The app provides a prediction regarding the likelihood of pneumonia, empowering healthcare professionals to make informed decisions and facilitate timely interventions. This app aids in improving the accuracy and efficiency of pneumonia diagnosis, leading to better patient outcomes and more effective treatment strategies. Dataset used : https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia")
+    image = Image.open('Pneumonia-p.jpg')
     new_image = image.resize((800, 500))
     st.image(new_image)
     st.header("Load X-Ray Chest image")
-    img = st.file_uploader(label="Click Browse Files and Upload" ,type=['jpeg', 'jpg', 'png'], key="xray")
+    img = st.file_uploader(label="Click Browse Files and Upload", type=[
+                           'jpeg', 'jpg', 'png'], key="xray")
 
     if img is not None:
         # Preprocessing Image
@@ -598,7 +602,7 @@ if (selected == 'Pneumonia Detector'):
             st.image(p_img)
 
     # Loading model
-        MODEL = "/home/phantom/Desktop/Project 1/pneumonia_classifiers.h5"
+        MODEL = "pneumonia_classifiers.h5"
         loading_msg = st.empty()
         loading_msg.text("Predicting...")
         model = keras.models.load_model(f"{MODEL}", compile=True)
