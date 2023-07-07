@@ -62,6 +62,10 @@ if (selected == 'HOME'):
     st.write("Our cutting-edge models, trained on extensive datasets, provide reliable insights into your health. Whether you're concerned about your cardiovascular health, liver function, or risk factors for diabetes, our app has you covered. Simply enter your details, and our intelligent algorithms will analyze the data to generate personalized predictions.")
     st.write("In addition to disease predictions, our app features an AI-powered chatbot equipped with state-of-the-art language models. Chat with our virtual doctor and get expert advice on various health-related queries.")
     st.write("With our web application, you can take charge of your well-being, make informed decisions, and seek timely medical intervention when necessary. Experience the future of healthcare with our comprehensive disease prediction app and embark on a journey towards a healthier life.")
+    st.write("Connect Me at:")
+    st.write("Github Link : https://github.com/Phantom-Harsh/Multiple-disease-Predictor")
+    st.write("LinkedIn Link : https://www.linkedin.com/in/harsh-tirhekar")
+    st.write("Email : iib2021016@iiita.ac.in")    
 
 if (selected == 'Liver Disease Prediction'):
 
