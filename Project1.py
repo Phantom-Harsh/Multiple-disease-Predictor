@@ -602,8 +602,7 @@ if (selected == 'Pneumonia Detector'):
             st.image(p_img)
 
     # Loading model
-        # MODEL = "pneumonia_classifiers.h5"
-	MODEL=""
+        MODEL = "pneumonia_classifiers.h5"	
         loading_msg = st.empty()
         loading_msg.text("Predicting...")
         model = keras.models.load_model(f"{MODEL}", compile=True)
