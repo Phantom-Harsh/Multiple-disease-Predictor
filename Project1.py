@@ -1,4 +1,9 @@
-#importing libraries
+# importing libraries
+from sklearn import tree
+import pandas as pd
+import base64
+from sklearn.model_selection import train_test_split
+import math
 from tensorflow import keras
 from keras.models import load_model
 from streamlit_option_menu import option_menu
@@ -8,33 +13,115 @@ import io
 from PIL import ImageOps, Image
 import numpy as np
 import joblib
+import PIL.Image
 import tensorflow as tf
 from streamlit_chat import message
 import os
 import openai
 openai.api_key = "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"
 
+with open('/home/phantom/Desktop/Project 2/pic2.jpg', "rb") as image_file:
+    encoded_string = base64.b64encode(image_file.read())
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url(data:image/{"jpg"};base64,{encoded_string.decode()});
+        background-size: cover
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # sidebar for navigation
 with st.sidebar:
-    selected = option_menu('Multiple Disease Prediction System',
+    selected = option_menu('Multiple Disease Prediction WebApp',
 
-                           ['Heart Disease Prediction',
+                           ['HOME',
+                            'Heart Disease Prediction',
                             'Hepatitis Mortality Predictor',
                             'Parkinsons Prediction',
                             'Diabetes Prediction',
-                            'Plant Diesease Detection',
+                            # 'Plant Diesease Detection',
+                            'Liver Disease Prediction',
                             'Pneumonia Detector',
                             'Help - ChatBot'],
-                           
-                           icons=['heart-pulse', 'snow', 'person',
-                                  'stack', 'suit-club', 'lungs', 'robot'],                
+
+                           icons=['house', 'heart-pulse', 'snow', 'person',
+                                  'stack', 'fingerprint', 'suit-club', 'lungs', 'robot'],
                            default_index=0)
+
+if (selected == 'HOME'):
+    st.title("Multiple Disease Prediction WebApp")
+    image = Image.open('/home/phantom/Downloads/images.png')
+    new_image = image.resize((800, 500))
+    st.image(new_image)    
+    st.text("The Following Disease Predictions Are Available ->")    
+
+# Liver Disease Prediction Page used # https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset
+if (selected == 'Liver Disease Prediction'):
+
+    st.title('Liver Disease Prediction')
+    image = Image.open('liver.png')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
+    info = pd.read_csv('/home/phantom/Downloads/dataset.csv')
+    info['Albumin_and_Globulin_Ratio'].fillna(
+        info['Albumin_and_Globulin_Ratio'].median(), inplace=True)
+
+    dt = tree.DecisionTreeClassifier()
+    info.rename(columns={'Dataset': 'Target'}, inplace=True)
+
+    X = info.drop('Target', axis=1)
+    y = info['Target']
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.3, random_state=42)
+
+    dt.fit(X_train, y_train)
+
+    B = st.slider("Age", int(info["Age"].min()), int(info["Age"].max()))
+    A = st.slider("Gender", int(
+        info["sex"].min()), int(info["sex"].max()))
+    C = st.slider("Total Bilirubin", int(
+        info["Total_Bilirubin"].min()), int(info["Total_Bilirubin"].max()))
+    D = st.slider("Direct Bilirubin", int(
+        info["Direct_Bilirubin"].min()), int(info["Direct_Bilirubin"].max()))
+    E = st.slider("Alkaline Phosphotase", int(
+        info["Alkaline_Phosphotase"].min()), int(info["Alkaline_Phosphotase"].max()))
+    F = st.slider("Alamine Aminotransferase", int(
+        info["Alamine_Aminotransferase"].min()), int(info["Alamine_Aminotransferase"].max()))
+    G = st.slider("Aspartate Aminotransferase", int(
+        info["Aspartate_Aminotransferase"].min()), int(info["Aspartate_Aminotransferase"].max()))
+    H = st.slider("Total Protiens", int(
+        info["Total_Protiens"].min()), int(info["Total_Protiens"].max()))
+    I = st.slider("Albumin", int(
+        info["Albumin"].min()), int(info["Albumin"].max()))
+    J = st.slider("Albumin Globulin Ratio", int(
+        info["Albumin_and_Globulin_Ratio"].min()), int(info["Albumin_and_Globulin_Ratio"].max()))
+
+    features = [A, B, C, D, E, F, G, H, I, J]
+    st.write(info.astype(int).info())
+    pretty_result = {"Sex": A, "age": B, "Total_Bilirubin": C, "Direct_Bilirubin": D, "Alkaline_Phosphotase": E, "Alamine_Aminotransferase": F,
+                     "Aspartate_Aminotransferase": G, "Total_Protiens": H, "Albumin": I, "Albumin_and_Globulin_Rati": J}
+    st.json(pretty_result)
+    if st.button('Submit'):
+        results = dt.predict([features])
+        st.title('Predection')
+        for final in results:
+            if final == 1:
+                st.warning('\n You have a Liver Disease')
+            else:
+                st.success(' You do NOT have a Liver Disease')
+
 
 # Heart Disease Prediction Page
 if (selected == 'Heart Disease Prediction'):
-    st.title('Heart Disease Prediction using ML')
+    st.title('Heart Disease Prediction using ML')    
     st.button("About", help="Cardiovascular disease or heart disease describes a range of conditions that affect your heart.\n Diseases under the heart disease umbrella include blood vessel diseases, such as coronary artery disease. \nFrom WHO statistics every year 17.9 million dying from heart disease. \nThe medical study says that human life style is the main reason behind this heart problem. Apart from this there are many key factors which warns that the person may/maynot getting chance of heart disease.\nFrom the dataset if we create suitable machine learning technique which classify the heart disease more accurately, it is very helpful to the health organisation as well as patients.\nDataset used Link : https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset?datasetId=216167&sortBy=voteCount")
-
+    image = Image.open('heart.jpg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
+    
     age = st.slider('age', 29, 77, 40, 1)
     cp = st.slider('cp', 0, 3, 1, 1)
     sex = st.slider('sex', 0, 1, 0, 1, help="0=female,1=male")
@@ -53,11 +140,12 @@ if (selected == 'Heart Disease Prediction'):
                   restecg, thalach, exang, oldpeak, slope, ca, thal]]
 
     load_clf = pickle.load(
-        open('heart_disease_model.pkl', 'rb'))
-    
-    pretty_result = {"age": age, "cp":cp, "sex": sex,"trestbps": trestbps, "chol": chol, "fbs": fbs, "restecg": restecg, "exang": exang, "oldpeak": oldpeak, "slope": slope,"ca":ca,"thal":thal,"thalach":thalach}
+        open('/home/phantom/Desktop/Project 1/heart_disease_model.pkl', 'rb'))
+
+    pretty_result = {"age": age, "cp": cp, "sex": sex, "trestbps": trestbps, "chol": chol, "fbs": fbs,
+                     "restecg": restecg, "exang": exang, "oldpeak": oldpeak, "slope": slope, "ca": ca, "thal": thal, "thalach": thalach}
     st.json(pretty_result)
-    
+
     prediction = load_clf.predict(X_test_sc)
     answer = prediction[0]
     if st.button('Predict'):
@@ -78,9 +166,11 @@ if (selected == 'Diabetes Prediction'):
     st.title(
         "Diabetes Risk Prediction for Females")
     st.markdown(
-        "About", help="This a Web app that tells you if you are a female whether you are at risk for Diabetes or not.")
+        "About", help="This a Web app that tells you if you are a female whether you are at risk for Diabetes or not.")    
+    image = Image.open('Diabetes.jpeg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
     st.header("Just fill in the information below")
-
     Pregnancies = st.slider("Input Your Number of Pregnancies", 0, 16)
     Glucose = st.slider("Input your Gluclose", 74, 200)
     BloodPressure = st.slider("Input your Blood Pressure", 30, 130)
@@ -93,9 +183,11 @@ if (selected == 'Diabetes Prediction'):
 
     inputs = [[Pregnancies, Glucose, BloodPressure, SkinThickness,
                Insulin, BMI, DiabetesPedigreeFunction, Age]]
-
+    pretty_result = {'Pregnancies': Pregnancies, 'Glucose': Glucose, 'Blood Pressure': BloodPressure, 'Skin Thickness': SkinThickness,
+                     'Insulin': Insulin, 'BMI': BMI, 'Diabetes Pedigree Function': DiabetesPedigreeFunction, 'Age': Age}
+    st.json(pretty_result)
     model = pickle.load(
-        open('model_DIAB.pkl', 'rb'))
+        open('/home/phantom/Desktop/Project 1/model_DIAB.pkl', 'rb'))
     if st.button('Predict'):
         result = model.predict(inputs)
         updated_res = result.flatten().astype(int)
@@ -117,8 +209,11 @@ if (selected == 'Diabetes Prediction'):
 if (selected == "Parkinsons Prediction"):
     # page title
     st.title("Parkinson's Disease Prediction using ML")
-
-    col1, col2, col3, col4     = st.columns(4)
+    image = Image.open('parkinsons-disease.jpg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
+    st.header("Just fill in the information below")
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         fo = st.text_input('MDVP: Fo(Hz)')
     with col2:
@@ -127,7 +222,7 @@ if (selected == "Parkinsons Prediction"):
         flo = st.text_input('MDVP: Flo(Hz)')
     with col4:
         Jitter_percent = st.text_input('MDVP: Jitter(%)')
-        
+
     with col1:
         Jitter_Abs = st.text_input('MDVP: Jitter(Abs)')
     with col2:
@@ -136,7 +231,7 @@ if (selected == "Parkinsons Prediction"):
         PPQ = st.text_input('MDVP: PPQ')
     with col4:
         DDP = st.text_input('Jitter: DDP')
-        
+
     with col1:
         Shimmer = st.text_input('MDVP: Shimmer')
     with col2:
@@ -145,7 +240,7 @@ if (selected == "Parkinsons Prediction"):
         APQ3 = st.text_input('Shimmer: APQ3')
     with col4:
         APQ5 = st.text_input('Shimmer: APQ5')
-        
+
     with col1:
         APQ = st.text_input('MDVP: APQ')
     with col2:
@@ -154,7 +249,7 @@ if (selected == "Parkinsons Prediction"):
         NHR = st.text_input('NHR')
     with col4:
         HNR = st.text_input('HNR')
-        
+
     with col1:
         RPDE = st.text_input('RPDE')
     with col2:
@@ -187,15 +282,19 @@ if (selected == "Parkinsons Prediction"):
 #
 
 # Hepatitis Mortality Predictor Page
+
+
 def get_value(val, my_dict):
     for key, value in my_dict.items():
         if val == key:
             return value
 
+
 def get_key(val, my_dict):
     for key, value in my_dict.items():
         if val == key:
             return key
+
 
 def get_fvalue(val):
     feature_dict = {"No": 1, "Yes": 2}
@@ -203,9 +302,13 @@ def get_fvalue(val):
         if val == key:
             return value
 
+
 if (selected == 'Hepatitis Mortality Predictor'):
     st.title("Hepatitis Mortality Predictor")
-
+    image = Image.open('Hepatitis.jpg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
+    st.header("Just fill in the information below")
     age = st.number_input("Age", 7, 80)
     gender_dict = {"male": 1, "female": 2}
     sex = st.radio("Sex", tuple(gender_dict.keys()))
@@ -226,22 +329,22 @@ if (selected == 'Hepatitis Mortality Predictor'):
 
     feature_list = [age, get_value(sex, gender_dict), get_fvalue(steroid), get_fvalue(antivirals), get_fvalue(fatigue), get_fvalue(
         spiders), get_fvalue(ascites), get_fvalue(varices), bilirubin, alk_phosphate, sgot, albumin, int(protime), get_fvalue(histology)]
-    
+
     pretty_result = {"age": age, "sex": sex, "steroid": steroid, "antivirals": antivirals, "fatigue": fatigue, "spiders": spiders, "ascites": ascites,
                      "varices": varices, "bilirubin": bilirubin, "alk_phosphate": alk_phosphate, "sgot": sgot, "albumin": albumin, "protime": protime, "histolog": histology}
     st.json(pretty_result)
     single_sample = np.array(feature_list).reshape(1, -1)
-    
-    model_choice = "DecisionTree"    
+
+    model_choice = "DecisionTree"
     loaded_model = joblib.load(
-        open('hepB_model.pkl', 'rb'))
+        open('/home/phantom/Desktop/Project 1/hepB_model.pkl', 'rb'))
     prediction = loaded_model.predict(single_sample)
-    pred_prob = loaded_model.predict_proba(single_sample)    
+    pred_prob = loaded_model.predict_proba(single_sample)
 
     if st.button("Predict"):
         prediction = loaded_model.predict(single_sample)
         pred_prob = loaded_model.predict_proba(single_sample)
-    
+
         if prediction == 1:
             st.warning("Patient Dies")
             pred_probability_score = {
@@ -250,7 +353,7 @@ if (selected == 'Hepatitis Mortality Predictor'):
                 "Prediction Probability Score using {}".format(model_choice))
             st.json(pred_probability_score)
             st.subheader("Prescriptive Analytics")
-        
+
             prescriptive_message_temp = """
 	    <div style="background-color:silver;overflow-x: auto; padding:10px;border-radius:5px;margin:10px;">
 		    <h3 style="text-align:justify;color:black;padding:10px">Recommended Life style modification</h3>
@@ -283,122 +386,130 @@ if (selected == 'Hepatitis Mortality Predictor'):
 #  pretty well
 #
 
-# Plant Diesease Detection Predictor Page
-def load_modell(path):
+# # Plant Diesease Detection Predictor Page
 
-    # Xception Model
-    xception_model = tf.keras.models.Sequential([
-        tf.keras.applications.xception.Xception(
-            include_top=False, weights='imagenet', input_shape=(512, 512, 3)),
-        tf.keras.layers.GlobalAveragePooling2D(),
-        tf.keras.layers.Dense(4, activation='softmax')
-    ])
+# def load_modell(path):
 
-    # DenseNet Model
-    densenet_model = tf.keras.models.Sequential([
-        tf.keras.applications.densenet.DenseNet121(
-            include_top=False, weights='imagenet', input_shape=(512, 512, 3)),
-        tf.keras.layers.GlobalAveragePooling2D(),
-        tf.keras.layers.Dense(4, activation='softmax')
-    ])
+#     # Xception Model
+#     xception_model = tf.keras.models.Sequential([
+#         tf.keras.applications.xception.Xception(
+#             include_top=False, weights='imagenet', input_shape=(512, 512, 3)),
+#         tf.keras.layers.GlobalAveragePooling2D(),
+#         tf.keras.layers.Dense(4, activation='softmax')
+#     ])
 
-    # Ensembling the Models
-    inputs = tf.keras.Input(shape=(512, 512, 3))
-    xception_output = xception_model(inputs)
-    densenet_output = densenet_model(inputs)
-    outputs = tf.keras.layers.average([densenet_output, xception_output])
-    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+#     # DenseNet Model
+#     densenet_model = tf.keras.models.Sequential([
+#         tf.keras.applications.densenet.DenseNet121(
+#             include_top=False, weights='imagenet', input_shape=(512, 512, 3)),
+#         tf.keras.layers.GlobalAveragePooling2D(),
+#         tf.keras.layers.Dense(4, activation='softmax')
+#     ])
 
-    # Loading the Weights of Model
-    model.load_weights(path)
-    return model
-#
-def clean_image(image):
-    image = np.array(image)    
-    image = np.array(Image.fromarray(
-        image).resize((512, 512), Image.ANTIALIAS))    
-    image = image[np.newaxis, :, :, :3]    
-    return image
+#     # Ensembling the Models
+#     inputs = tf.keras.Input(shape=(512, 512, 3))
+#     xception_output = xception_model(inputs)
+#     densenet_output = densenet_model(inputs)
+#     outputs = tf.keras.layers.average([densenet_output, xception_output])
+#     model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
-def get_prediction(model, image):
-    datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-        rescale=1./255)    
-    test = datagen.flow(image)    
-    predictions = model.predict(test)
-    predictions_arr = np.array(np.argmax(predictions))
-    return predictions, predictions_arr
-
-def make_results(predictions, predictions_arr):
-    result = {}
-    if int(predictions_arr) == 0:
-        result = {"status": " is Healthy ",
-                  "prediction": f"{int(predictions[0][0].round(2)*100)}%"}
-    if int(predictions_arr) == 1:
-        result = {"status": ' has Multiple Diseases ',
-                  "prediction": f"{int(predictions[0][1].round(2)*100)}%"}
-    if int(predictions_arr) == 2:
-        result = {"status": ' has Rust ',
-                  "prediction": f"{int(predictions[0][2].round(2)*100)}%"}
-    if int(predictions_arr) == 3:
-        result = {"status": ' has Scab ',
-                  "prediction": f"{int(predictions[0][3].round(2)*100)}%"}
-    return result
+#     # Loading the Weights of Model
+#     model.load_weights(path)
+#     return model
+# #
 
 
-if (selected == "Plant Diesease Detection"):
-    st.title('Plant Diesease Detection')
-    st.write(
-        "Just Upload your Plant's Leaf Image and get predictions if the plant is healthy or not")
-    filee = st.file_uploader("Choose a Image file", type=["png", "jpg"])
-    b = False
-    st.write("Take a photo")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("start Camera"):
-            b = 0
-        else:
-            b = 1
-    with col2:
-        if st.button("stop Camera"):
-            b = 1
-        else:
-            b = 0
-                
-    camera_photo = st.camera_input("", disabled=b)    
-    if filee is None:
-        uploaded_file = camera_photo        
-    else:
-        uploaded_file = filee
-    st.image(uploaded_file)
+# def clean_image(image):
+#     image = np.array(image)
+#     image = np.array(Image.fromarray(
+#         image).resize((512, 512), Image.ANTIALIAS))
+#     image = image[np.newaxis, :, :, :3]
+#     return image
 
-    if uploaded_file != None:        
-        progress = st.text("Crunching Image")
-        my_bar = st.progress(0)
-        i = 0
-            
-        image = Image.open(io.BytesIO(uploaded_file.read()))
-        st.image(np.array(Image.fromarray(
-            np.array(image)).resize((700, 400), Image.ANTIALIAS)), width=None)
-        my_bar.progress(i + 40)
-    
-        image = clean_image(image)
-        predictions, predictions_arr = get_prediction(model, image)
-        my_bar.progress(i + 30)    
-        result = make_results(predictions, predictions_arr)
-    
-        my_bar.progress(i + 30)
-        progress.empty()
-        i = 0
-        my_bar.empty()
-        
-        st.write(
-            f"The plant {result['status']} with {result['prediction']} prediction.")
+
+# def get_prediction(model, image):
+#     datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+#         rescale=1./255)
+#     test = datagen.flow(image)
+#     predictions = model.predict(test)
+#     predictions_arr = np.array(np.argmax(predictions))
+#     return predictions, predictions_arr
+
+
+# def make_results(predictions, predictions_arr):
+#     result = {}
+#     if int(predictions_arr) == 0:
+#         result = {"status": " is Healthy ",
+#                   "prediction": f"{int(predictions[0][0].round(2)*100)}%"}
+#     if int(predictions_arr) == 1:
+#         result = {"status": ' has Multiple Diseases ',
+#                   "prediction": f"{int(predictions[0][1].round(2)*100)}%"}
+#     if int(predictions_arr) == 2:
+#         result = {"status": ' has Rust ',
+#                   "prediction": f"{int(predictions[0][2].round(2)*100)}%"}
+#     if int(predictions_arr) == 3:
+#         result = {"status": ' has Scab ',
+#                   "prediction": f"{int(predictions[0][3].round(2)*100)}%"}
+#     return result
+
+
+# if (selected == "Plant Diesease Detection"):
+#     model = load_modell('/home/phantom/Desktop/Project 1/plant_disease.h5')
+#     st.title('Plant Diesease Detection')
+#     st.write(
+#         "Just Upload your Plant's Leaf Image and get predictions if the plant is healthy or not")
+#     filee = st.file_uploader("Choose a Image file", type=["png", "jpg"])
+#     b = False
+#     st.write("Take a photo")
+#     col1, col2 = st.columns(2)
+#     with col1:
+#         if st.button("start Camera"):
+#             b = 0
+#         else:
+#             b = 1
+#     with col2:
+#         if st.button("stop Camera"):
+#             b = 1
+#         else:
+#             b = 0
+
+#     camera_photo = st.camera_input("", disabled=b)
+#     if filee is None:
+#         uploaded_file = camera_photo
+#     else:
+#         uploaded_file = filee
+#     st.image(uploaded_file)
+
+#     if uploaded_file != None:
+#         progress = st.text("Crunching Image")
+#         my_bar = st.progress(0)
+#         i = 0
+
+#         image = Image.open(io.BytesIO(uploaded_file.read()))
+#         st.image(np.array(Image.fromarray(
+#             np.array(image)).resize((700, 400), Image.ANTIALIAS)), width=None)
+#         my_bar.progress(i + 40)
+
+#         image = clean_image(image)
+#         predictions, predictions_arr = get_prediction(model, image)
+#         my_bar.progress(i + 30)
+#         result = make_results(predictions, predictions_arr)
+
+#         my_bar.progress(i + 30)
+#         progress.empty()
+#         i = 0
+#         my_bar.empty()
+
+#         st.write(
+#             f"The plant {result['status']} with {result['prediction']} prediction.")
 
 #
 #  half
 #
 
 # Help - ChatBot Page
+
+
 def get_initial_message():
     messages = [
         {"role": "system", "content": "You are a helpful AI Doctor in Healthcare. Who anwers brief questions about AI."},
@@ -408,6 +519,7 @@ def get_initial_message():
     ]
     return messages
 
+
 def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     print("model: ", model)
     response = openai.ChatCompletion.create(
@@ -416,14 +528,19 @@ def get_chatgpt_response(messages, model="gpt-3.5-turbo"):
     )
     return response['choices'][0]['message']['content']
 
+
 def update_chat(messages, role, content):
     messages.append({"role": role, "content": content})
     return messages
 
+
 if (selected == 'Help - ChatBot'):
     st.title("Chatbot: ChatGPT & Streamlit Chat")
     st.subheader("AI Doctor:")
-    
+    image = Image.open('ChatBot.jpg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)    
+
     model = st.selectbox(
         "Select a model",
         ("gpt-3.5-turbo", "gpt-4")
@@ -459,16 +576,20 @@ if (selected == 'Help - ChatBot'):
 #
 
 # Pneumonia Detector Prediction Page
-if (selected == 'Pneumonia Detector'):  
-    st.title("Pneumonia Detector")  
+if (selected == 'Pneumonia Detector'):
+    st.title("Pneumonia Detector")
     st.button("About", help=" What is Pneumonia? \nPneumonia is an inflammatory condition of the lung affecting primarily the small air sacs known as alveoli.Symptoms typically include some combination of productive or dry cough, chest pain, fever and difficulty breathing. The severity of the condition is variable. Pneumonia is usually caused by infection with viruses or bacteria and less commonly by other microorganisms, certain medications or conditions such as autoimmune diseases.Risk factors include cystic fibrosis, chronic obstructive pulmonary disease (COPD), asthma, diabetes, heart failure, a history of smoking, a poor ability to cough such as following a stroke and a weak immune system. Diagnosis is often based on symptoms and physical examination. Chest X-ray, blood tests, and culture of the sputum may help confirm the diagnosis.The disease may be classified by where it was acquired, such as community- or hospital-acquired or healthcare-associated pneumonia.")
-    img = st.file_uploader(label="Load X-Ray Chest image", type=['jpeg', 'jpg', 'png'], key="xray")
+    image = Image.open('Pneumonia.jpg')
+    new_image = image.resize((800, 500))
+    st.image(new_image)
+    st.header("Load X-Ray Chest image")
+    img = st.file_uploader(label="Click Browse Files and Upload" ,type=['jpeg', 'jpg', 'png'], key="xray")
 
     if img is not None:
         # Preprocessing Image
         i11 = Image.open(img).convert("RGB")
         p_img = i11.resize((224, 224))
-        p_img=np.array(p_img) / 255.0    
+        p_img = np.array(p_img) / 255.0
 
         if st.checkbox('Zoom image'):
             image = np.array(Image.open(img))
@@ -479,23 +600,22 @@ if (selected == 'Pneumonia Detector'):
     # Loading model
         MODEL = "/home/phantom/Desktop/Project 1/pneumonia_classifiers.h5"
         loading_msg = st.empty()
-        loading_msg.text("Predicting...")             
-        model = keras.models.load_model(f"{MODEL}", compile=True)        
+        loading_msg.text("Predicting...")
+        model = keras.models.load_model(f"{MODEL}", compile=True)
 
-    # Predicting result        
-        prediction=1        
+    # Predicting result
+        prediction = 1
         prob = model.predict(np.reshape(p_img, [1, 224, 224, 3]))
-        prob = prob.reshape(1,-1)[0]        
+        prob = prob.reshape(1, -1)[0]
         if prob[0] > 0.5:
             prediction = True
         else:
-            prediction = False    
+            prediction = False
         loading_msg.text('')
 
-        if prediction:            
+        if prediction:
             st.warning("Pneumonia Detected! :slightly_frowning_face")
-        else:            
+        else:
             st.success("No Pneumonia Detected, Healthy! :smile")
 
         st.text(f"Probability of Pneumonia is {round(prob[0] * 100, 2)}%")
-    
