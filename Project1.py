@@ -52,7 +52,7 @@ with st.sidebar:
                            default_index=0)
 
 if (selected == 'HOME'):
-   st.title("Multiple Disease Prediction WebApp")
+    st.title("Multiple Disease Prediction WebApp")
     st.write("")
     image = Image.open('HOME.jpg')
     new_image = image.resize((800, 500))
