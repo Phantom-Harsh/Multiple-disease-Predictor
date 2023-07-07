@@ -1,7 +1,7 @@
 # Multiple-disease-Predictor
 
 **Short Description**
-Discover our groundbreaking web app! Predict diseases like heart disease, hepatitis mortality, Parkinson's disease, diabetes risk, pneumonia, and detect plant diseases. Engage with an AI doctor through our chatbot. Experience accurate predictions and personalized healthcare insights. Your health, our priority!
+Discover our groundbreaking web app! Predict diseases like heart disease, hepatitis mortality, Parkinson's disease, diabetes risk, pneumonia, and detect liver diseases. Engage with an AI doctor through our chatbot. Experience accurate predictions and personalized healthcare insights. Your health, our priority!
 
 **Description**
 
@@ -21,10 +21,8 @@ Let's explore some of the key features our app has to offer:
 
 5. Pneumonia Detector: This feature utilizes X-ray chest images to detect pneumonia. By uploading an image, our app employs advanced image processing techniques to analyze and provide an accurate diagnosis, helping users take appropriate action promptly.
 
-6. Plant Disease Detection: By leveraging sophisticated deep learning models such as Xception and DenseNet, our app assists in identifying diseases in plants. Users can upload images of plant leaves, and our models will analyze them to determine whether the plant is healthy or affected by diseases, aiding in timely intervention.
+6. Liver Disease Prediction: Our app incorporates a sophisticated prediction model to assess the risk and presence of liver disease, based on relevant factors such as liver function tests, age, and gender.
 
 7. AI Doctor Chatbot: Engage in a conversation with our AI-powered doctor, equipped with the capabilities of the GPT-3.5 Turbo or GPT-4 model. Simply enter your health-related query, and our chatbot will provide accurate responses, guiding you with reliable information and recommendations.
 
-Our web application aims to empower users with valuable health insights, enabling them to make informed decisions about their well-being. Whether you are concerned about heart disease, hepatitis, Parkinson's, diabetes, pneumonia, or plant health, our app has you covered. With its intuitive interface and advanced prediction models, our app is your go-to resource for comprehensive disease prediction and health-related information.
-
-Experience the future of healthcare with our Multiple Disease Prediction App. Take control of your health today!
+With our web application, you gain valuable health insights, empowering you to make informed decisions about your well-being. From heart disease and hepatitis to Parkinson's, diabetes, pneumonia, and liver disease, our app covers a broad spectrum of health predictions. Experience the future of healthcare today and take control of your health like never before!
