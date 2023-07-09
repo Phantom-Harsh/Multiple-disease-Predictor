@@ -1,5 +1,5 @@
 # importing libraries
-from sklearn import tree
+
 import pandas as pd
 import base64
 from sklearn.model_selection import train_test_split
