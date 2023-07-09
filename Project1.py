@@ -63,10 +63,11 @@ if (selected == 'HOME'):
     st.write("In addition to disease predictions, our app features an AI-powered chatbot equipped with state-of-the-art language models. Chat with our virtual doctor and get expert advice on various health-related queries.")
     st.write("With our web application, you can take charge of your well-being, make informed decisions, and seek timely medical intervention when necessary. Experience the future of healthcare with our comprehensive disease prediction app and embark on a journey towards a healthier life.")
     st.write("Connect Me at:")
-    # st.write("Github Link : https://github.com/Phantom-Harsh/Multiple-disease-Predictor")
+    st.write("Github Link : https://github.com/Phantom-Harsh/Multiple-disease-Predictor")
     st.write("LinkedIn Link : https://www.linkedin.com/in/harsh-tirhekar")
     st.write("Email : iib2021016@iiita.ac.in")    
 
+# Liver Disease Prediction Page used # https://www.kaggle.com/datasets/abhi8923shriv/liver-disease-patient-dataset
 if (selected == 'Liver Disease Prediction'):
 
     st.title('Liver Disease Prediction')
@@ -74,7 +75,7 @@ if (selected == 'Liver Disease Prediction'):
     image = Image.open('Liver.jpeg')
     new_image = image.resize((800, 500))
     st.image(new_image)
-    info = pd.read_csv('dataset.csv')
+    info = pd.read_csv(dataset.csv')
     info['Albumin_and_Globulin_Ratio'].fillna(
         info['Albumin_and_Globulin_Ratio'].median(), inplace=True)
 
@@ -465,7 +466,7 @@ if (selected == 'Hepatitis Mortality Predictor'):
 
 
 # if (selected == "Plant Diesease Detection"):
-#     model = load_modell('/home/phantom/Desktop/Project 1/plant_disease.h5')
+#     model = load_modell('plant_disease.h5')
 #     st.title('Plant Diesease Detection')
 #     st.write(
 #         "Just Upload your Plant's Leaf Image and get predictions if the plant is healthy or not")
@@ -610,7 +611,7 @@ if (selected == 'Pneumonia Detector'):
             st.image(p_img)
 
     # Loading model
-        MODEL = "pneumonia_classifiers.h5"	
+        MODEL = "pneumonia_classifiers.h5"
         loading_msg = st.empty()
         loading_msg.text("Predicting...")
         model = keras.models.load_model(f"{MODEL}", compile=True)
