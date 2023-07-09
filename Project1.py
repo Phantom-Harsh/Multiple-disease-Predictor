@@ -75,7 +75,7 @@ if (selected == 'Liver Disease Prediction'):
     image = Image.open('Liver.jpeg')
     new_image = image.resize((800, 500))
     st.image(new_image)
-    info = pd.read_csv(dataset.csv')
+    info = pd.read_csv('dataset.csv')
     info['Albumin_and_Globulin_Ratio'].fillna(
         info['Albumin_and_Globulin_Ratio'].median(), inplace=True)
 
