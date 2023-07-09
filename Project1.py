@@ -563,25 +563,31 @@ if (selected == 'Help - ChatBot'):
         st.session_state['past'] = []
 
     query = st.text_input("Query: ", key="input")
-
+	
     if 'messages' not in st.session_state:
-        st.session_state['messages'] = get_initial_message()
+        st.success(" SORRY for inconvenience...  But it is not working now as API is now Paid (I have a errorless working code though).")
+        st.warning("Reason : Unfortunately, no free version of Chat GPT API is available now. However, Open AI offers a free trial period for new users to test the API before committing to a paid plan. After that, users need to pay for API usage.")        
+    if query:    
+        st.success(" SORRY for inconvenience...  But it is not working now as API is now Paid (I have a errorless working code though).")
+        st.warning("Reason : Unfortunately, no free version of Chat GPT API is available now. However, Open AI offers a free trial period for new users to test the API before committing to a paid plan. After that, users need to pay for API usage.")        
+    # if 'messages' not in st.session_state:
+    #     st.session_state['messages'] = get_initial_message()
 
-    if query:
-        with st.spinner("generating..."):
-            messages = st.session_state['messages']
-            messages = update_chat(messages, "user", query)
-            response = get_chatgpt_response(messages, model)
-            messages = update_chat(messages, "assistant", response)
-            st.session_state.past.append(query)
-            st.session_state.generated.append(response)
-        if st.session_state['generated']:
-            for i in range(len(st.session_state['generated'])-1, -1, -1):
-                message(st.session_state['past'][i],
-                        is_user=True, key=str(i) + '_user')
-                message(st.session_state["generated"][i], key=str(i))
-        with st.expander("Show Messages"):
-            st.write(messages)
+    # if query:
+    #     with st.spinner("generating..."):
+    #         messages = st.session_state['messages']
+    #         messages = update_chat(messages, "user", query)
+    #         response = get_chatgpt_response(messages, model)
+    #         messages = update_chat(messages, "assistant", response)
+    #         st.session_state.past.append(query)
+    #         st.session_state.generated.append(response)
+    #     if st.session_state['generated']:
+    #         for i in range(len(st.session_state['generated'])-1, -1, -1):
+    #             message(st.session_state['past'][i],
+    #                     is_user=True, key=str(i) + '_user')
+    #             message(st.session_state["generated"][i], key=str(i))
+    #     with st.expander("Show Messages"):
+    #         st.write(messages)
 
 #
 # Done but require payment lol
