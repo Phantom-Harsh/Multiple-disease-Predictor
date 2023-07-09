@@ -9,4 +9,4 @@ ImageHash==4.3.1
 joblib==1.2.0
 streamlit-chat==0.1.1
 openai==0.27.8
-scikit-learn==0.22.1
+scikit_learn==0.24.2
